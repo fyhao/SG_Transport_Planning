@@ -166,4 +166,4 @@ print(plan_path('CC10','NS7'))
 #reference:
 # http://benalexkeen.com/implementing-djikstras-shortest-path-algorithm-with-python/
 # http://www.lihaoyi.com/post/PlanningBusTripswithPythonSingaporesSmartNationAPIs.html#dijkstras-algorithm
-# 1
+# 2
