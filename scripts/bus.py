@@ -116,6 +116,12 @@ def plan_path(source,dest):
         i = 0
         while i < len(route) - 1:
             cost = 1
+            arr1 = route[i].split(':')
+            arr2 = route[i+1].split(':')
+            sn1 = arr1[0]
+            sn2 = arr2[0]
+            if sn1 != sn2:
+                cost = 5 #change bus
             edges.append((route[i], route[i+1],cost))
             i = i+1
 
