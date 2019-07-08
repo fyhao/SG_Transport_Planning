@@ -107,7 +107,7 @@ for r in busRoutes:
 breakDownRoutes = []
 #breakDownRoutes.append(['NS13','NS12','NS11'])
 
-def plan_path(source,dest):
+def internal_plan_path(source,dest):
     debug("DEBUG source=" + source + ", dest=" + dest)
     graph = Graph()
     edges = []
@@ -135,6 +135,77 @@ def plan_path(source,dest):
     a = dijsktra(graph, source, dest)
     return a
 
+
+stops = []
+with open('stops.json', 'r') as f:
+    stops = json.load(f)   
+
+def formatBusStop(field1, field2, source):
+    stop1 = [s[field1] for s in stops if s[field2] == source]
+    if len(stop1) > 0:
+        return stop1[0]
+    return None
+    
+    
+def plan_path(source, dest):
+    stop1 = formatBusStop("BusStopCode", "Description", source)
+    stop2 = formatBusStop("BusStopCode", "Description", dest)
+    if stop1 == None or stop2 == None:
+        return None
+    
+    result = internal_plan_path(stop1, stop2)
+    result = [{"ServiceNo" : r.split(':')[0], 'BusStopCode' : r.split(':')[1]} for r in result]
+    return result
+    
+def plan_path_by_code(source, dest):
+    stop1 = source
+    stop2 = dest
+    if stop1 == None or stop2 == None:
+        return None
+    
+    result = internal_plan_path(stop1, stop2)
+    result = [{"ServiceNo" : r.split(':')[0], 'BusStopCode' : r.split(':')[1]} for r in result]
+    return result
+
+def print_result(result):
+    res = ["Service No: " + r["ServiceNo"] + " at Bus Stop " + formatBusStop("Description", "BusStopCode", r["BusStopCode"]) for r in result]
+    for i in res:
+        print(i)
+
+def print_guide(result):
+    lastServiceNo = ''
+    lastBusStop = ''
+    taken = False
+    res = []
+    noOfStops = 0
+    lastNoOfStops = 0
+    for r in result:
+        if lastServiceNo != r["ServiceNo"]:
+            if taken == False:
+                place = formatBusStop("Description", "BusStopCode", r["BusStopCode"])
+                res.append("Take bus " + r["ServiceNo"] + " at " + place)
+                taken = True
+            else:
+                lastPlace = formatBusStop("Description", "BusStopCode", lastBusStop)
+                res.append("Alight at " + lastPlace + " after " + str(noOfStops) + " stops")
+                place = formatBusStop("Description", "BusStopCode", r["BusStopCode"])
+                res.append("Take bus " + r["ServiceNo"] + " at " + place)
+            
+            noOfStops = 0
+        else:
+            noOfStops = noOfStops + 1
+            lastNoOfStops = noOfStops
+            
+        lastServiceNo = r["ServiceNo"]
+        lastBusStop = r["BusStopCode"]
+    lastPlace = formatBusStop("Description", "BusStopCode", lastBusStop)
+    res.append("Alight at " + lastPlace + " after " + str(lastNoOfStops) + " stops and reached destination")
+    for i in res:
+        print(i)
+        
 print("Result:")
-r = plan_path('27461','28009')
-print(r)
+#r = plan_path('Clementi Stn',"Opp S'pore Expo")
+r = plan_path_by_code('70231',"45131")
+print_result(r)
+print("-----")
+print_guide(r)
