@@ -205,7 +205,7 @@ def print_guide(result):
         
 print("Result:")
 #r = plan_path('Clementi Stn',"Opp S'pore Expo")
-r = plan_path_by_code('70231',"45131")
+r = plan_path_by_code('70231',"49121")
 print_result(r)
 print("-----")
 print_guide(r)
