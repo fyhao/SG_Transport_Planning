@@ -1,6 +1,6 @@
 # MRT dijsktra algorithm
 from collections import defaultdict
-
+import json
 class Graph():
     def __init__(self):
         """
@@ -66,6 +66,7 @@ def debug(msg):
 routes = [
     
 ]
+'''
 # build EW1 to EW33
 ewRoute = []
 for i in range(33):
@@ -111,6 +112,11 @@ routes.append(['DT19','NE4'])
 routes.append(['DT26','CC10'])
 routes.append(['DT32','EW2'])
 
+with open('mrt.json', 'w') as f:
+    json.dump(routes, f)
+'''   
+with open('mrt.json', 'r') as f:
+    routes = json.load(f)
 breakDownRoutes = []
 breakDownRoutes.append(['NS13','NS12','NS11'])
 
