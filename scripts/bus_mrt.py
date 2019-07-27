@@ -92,11 +92,11 @@ for route in busRoutes:
 for route in mrtRoutes:
     i = 0
     while i < len(route) - 1:
-        cost = 1
+        cost = 2000
         
         # if route A and B is different prefix (MRT)
         if route[i][:2] != route[i+1][:2]:
-            cost = 15
+            cost = cost * 15
         
         # Check breakdown route and ignore
         isBreakDown = False
@@ -109,13 +109,26 @@ for route in mrtRoutes:
         
 for route in busMrtRoutes:
     cost = 1
+    if ':' in route[0]:
+        type0 = 'bus'
+    else:
+        type0 = 'mrt'
+    if ':' in route[1]:
+        type1 = 'bus'
+    else:
+        type1 = 'mrt'
+
+    if type0 == 'bus' and type1 == 'mrt':
+        cost = 10
+    else:
+        cost = 1
     edges.append((route[0], route[1],cost))
     
 for edge in edges:
     graph.add_edge(*edge)
     
 # Test
-source = 'DT13'
+source = '170:40041'
 dest = 'NS1'
 a = dijsktra(graph, source, dest)
 print(a)
