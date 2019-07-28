@@ -20,9 +20,12 @@ for route in routes:
     serviceData = [x for x in services if x['ServiceNo'] == route['ServiceNo']][0]
     for k in serviceData:
         item[k] = serviceData[k]
-    stopServiceData[key].append(item)
+    oldItem = [x for x in stopServiceData[key] if x['ServiceNo'] == route['ServiceNo']]
+    if(len(oldItem) == 0): 
+        stopServiceData[key].append(item)
 
 with open('stopServiceData.json', 'w') as f:
-    json.dump(routes, f)
+    json.dump(stopServiceData, f)
     
-print(stopServiceData)
+##print(stopServiceData)
+print(stopServiceData['70231'])
